@@ -1,0 +1,284 @@
+[handleMsg]:  {
+  key: {
+    remoteJid: '593991102959@s.whatsapp.net',
+    fromMe: false,
+    id: 'EBA98F7F5A41C3E63EABA737ECE9DEEE',
+    participant: undefined
+  },
+  messageTimestamp: 1748363375,
+  pushName: '𝐕𝐢𝐜𝐤𝐢',
+  broadcast: false,
+  message: Message {
+    conversation: 'Turned desinfectante',
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2,
+      messageSecret: [Uint8Array]
+    }
+  },
+  body: 'Turned desinfectante',
+  from: '593991102959'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_f8fb86ae-8619-45da-b52b-18bb71758adf',
+  keyword: 'key_0ebb3155-f998-458d-a7ba-3306f66c03c4',
+  answer: '__call_action__',
+  options: {
+    media: null,
+    buttons: [],
+    capture: false,
+    child: null,
+    delay: 0,
+    idle: null,
+    ref: null,
+    nested: [],
+    keyword: {},
+    callback: true
+  },
+  refSerialize: '940777c17a9a4611dba3095457d4e47e'
+}
+[handleMsg]:  {
+  key: {
+    remoteJid: '593991102959@s.whatsapp.net',
+    fromMe: false,
+    id: 'F6FFA28321DD7D9048E66579CB053094',
+    participant: undefined
+  },
+  messageTimestamp: 1748363382,
+  pushName: '𝐕𝐢𝐜𝐤𝐢',
+  broadcast: false,
+  message: Message {
+    conversation: 'Turned desinfectante',
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2,
+      messageSecret: [Uint8Array]
+    }
+  },
+  body: 'Turned desinfectante',
+  from: '593991102959'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_f8fb86ae-8619-45da-b52b-18bb71758adf',
+  keyword: 'key_0ebb3155-f998-458d-a7ba-3306f66c03c4',
+  answer: '__call_action__',
+  options: {
+    media: null,
+    buttons: [],
+    capture: false,
+    child: null,
+    delay: 0,
+    idle: null,
+    ref: null,
+    nested: [],
+    keyword: {},
+    callback: true
+  },
+  refSerialize: '940777c17a9a4611dba3095457d4e47e'
+}
+[handleMsg]:  {
+  key: {
+    remoteJid: '593991102959@s.whatsapp.net',
+    fromMe: false,
+    id: '2F55F12F94FD6986C2BFC4AD2601B5F2',
+    participant: undefined
+  },
+  messageTimestamp: 1748363400,
+  pushName: '𝐕𝐢𝐜𝐤𝐢',
+  broadcast: false,
+  message: Message {
+    conversation: 'Turned desinfectante',
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2,
+      messageSecret: [Uint8Array]
+    }
+  },
+  body: 'Turned desinfectante',
+  from: '593991102959'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_f8fb86ae-8619-45da-b52b-18bb71758adf',
+  keyword: 'key_0ebb3155-f998-458d-a7ba-3306f66c03c4',
+  answer: '__call_action__',
+  options: {
+    media: null,
+    buttons: [],
+    capture: false,
+    child: null,
+    delay: 0,
+    idle: null,
+    ref: null,
+    nested: [],
+    keyword: {},
+    callback: true
+  },
+  refSerialize: '940777c17a9a4611dba3095457d4e47e'
+}
+[handleMsg]:  {
+  key: {
+    remoteJid: '593960190333@s.whatsapp.net',
+    fromMe: false,
+    id: 'AD3A81DB7BEF182306697215B4743AC0',
+    participant: undefined
+  },
+  messageTimestamp: 1748363443,
+  pushName: 'Edwin Coral',
+  broadcast: false,
+  message: Message {
+    extendedTextMessage: ExtendedTextMessage {
+      text: 'Buenos días',
+      previewType: 0,
+      contextInfo: [ContextInfo],
+      inviteLinkGroupTypeV2: 0
+    },
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2,
+      messageSecret: [Uint8Array]
+    }
+  },
+  body: 'Buenos días',
+  from: '593960190333'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_f8fb86ae-8619-45da-b52b-18bb71758adf',
+  keyword: 'key_0ebb3155-f998-458d-a7ba-3306f66c03c4',
+  answer: '__call_action__',
+  options: {
+    media: null,
+    buttons: [],
+    capture: false,
+    child: null,
+    delay: 0,
+    idle: null,
+    ref: null,
+    nested: [],
+    keyword: {},
+    callback: true
+  },
+  refSerialize: '940777c17a9a4611dba3095457d4e47e'
+}
+[handleMsg]:  {
+  key: {
+    remoteJid: '593960190333@s.whatsapp.net',
+    fromMe: false,
+    id: '64E2A5CBB855A687BDA7E44747A0E25C',
+    participant: undefined
+  },
+  messageTimestamp: 1748363462,
+  pushName: 'Edwin Coral',
+  broadcast: false,
+  message: Message {
+    conversation: 'Buenos días, por favor me puede ayudar con 1 galón de desengrasante biodegradable?\n' +
+      'Gracias.',
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2,
+      messageSecret: [Uint8Array]
+    }
+  },
+  body: 'Buenos días, por favor me puede ayudar con 1 galón de desengrasante biodegradable?\n' +
+    'Gracias.',
+  from: '593960190333'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_f8fb86ae-8619-45da-b52b-18bb71758adf',
+  keyword: 'key_0ebb3155-f998-458d-a7ba-3306f66c03c4',
+  answer: '__call_action__',
+  options: {
+    media: null,
+    buttons: [],
+    capture: false,
+    child: null,
+    delay: 0,
+    idle: null,
+    ref: null,
+    nested: [],
+    keyword: {},
+    callback: true
+  },
+  refSerialize: '940777c17a9a4611dba3095457d4e47e'
+}
+[handleMsg]:  {
+  key: {
+    remoteJid: '593960190333@s.whatsapp.net',
+    fromMe: false,
+    id: '95B204152088EA8C15B7DF073E7619F2',
+    participant: undefined
+  },
+  messageTimestamp: 1748363537,
+  pushName: 'Edwin Coral',
+  broadcast: false,
+  message: Message {
+    conversation: 'Local Papa Estelar Carapungo, pago en efectivo',
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2,
+      messageSecret: [Uint8Array]
+    }
+  },
+  body: 'Local Papa Estelar Carapungo, pago en efectivo',
+  from: '593960190333'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_f8fb86ae-8619-45da-b52b-18bb71758adf',
+  keyword: 'key_0ebb3155-f998-458d-a7ba-3306f66c03c4',
+  answer: '__call_action__',
+  options: {
+    media: null,
+    buttons: [],
+    capture: false,
+    child: null,
+    delay: 0,
+    idle: null,
+    ref: null,
+    nested: [],
+    keyword: {},
+    callback: true
+  },
+  refSerialize: '940777c17a9a4611dba3095457d4e47e'
+}
+[handleMsg]:  {
+  key: {
+    remoteJid: '593960190333@s.whatsapp.net',
+    fromMe: false,
+    id: '9F260CABBFCA91A519305E37534E7ABC',
+    participant: undefined
+  },
+  messageTimestamp: 1748363592,
+  pushName: 'Edwin Coral',
+  broadcast: false,
+  message: Message {
+    locationMessage: LocationMessage {
+      degreesLatitude: -0.0988861,
+      degreesLongitude: -78.4537515,
+      jpegThumbnail: [Uint8Array]
+    },
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2,
+      messageSecret: [Uint8Array]
+    }
+  },
+  body: '_event_location__5b7173b1-f304-48b3-a086-e4d88d13c1c3',
+  from: '593960190333'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_f8fb86ae-8619-45da-b52b-18bb71758adf',
+  keyword: 'key_0ebb3155-f998-458d-a7ba-3306f66c03c4',
+  answer: '__call_action__',
+  options: {
+    media: null,
+    buttons: [],
+    capture: false,
+    child: null,
+    delay: 0,
+    idle: null,
+    ref: null,
+    nested: [],
+    keyword: {},
+    callback: true
+  },
+  refSerialize: '940777c17a9a4611dba3095457d4e47e'
+}
