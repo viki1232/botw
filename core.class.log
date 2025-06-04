@@ -1,0 +1,66 @@
+[handleMsg]:  {
+  key: {
+    remoteJid: '593998081000@s.whatsapp.net',
+    fromMe: false,
+    id: '5FFF850ACC3DEDDBEBAA873A0966F588',
+    participant: undefined
+  },
+  messageTimestamp: 1749003769,
+  pushName: 'SmartLink Conexion Inteligente con La Limpieza',
+  broadcast: false,
+  message: Message {
+    conversation: 'Tienes jabón',
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2,
+      messageSecret: [Uint8Array]
+    }
+  },
+  verifiedBizName: 'SmartLink Conexion Inteligente con La Limpieza',
+  body: 'Tienes jabón',
+  from: '593998081000'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_f6053dcf-97d1-4529-b817-d06851715c01',
+  keyword: 'key_25242da3-5155-4f2c-a33a-8792216beb32',
+  answer: '__call_action__',
+  options: {
+    media: null,
+    buttons: [],
+    capture: false,
+    child: null,
+    delay: 0,
+    idle: null,
+    ref: null,
+    nested: [],
+    keyword: {},
+    callback: true
+  },
+  refSerialize: '19c8dce236e70c5c5659f8934b244e32'
+}
+[handleMsg]:  {
+  key: {
+    remoteJid: '593998081000@s.whatsapp.net',
+    fromMe: false,
+    id: '3EB0820DC87C759F474CA0',
+    participant: undefined
+  },
+  messageTimestamp: 1749003777,
+  pushName: 'SmartLink Conexion Inteligente con La Limpieza',
+  broadcast: false,
+  message: Message {
+    protocolMessage: ProtocolMessage {
+      type: 4,
+      ephemeralExpiration: 0,
+      ephemeralSettingTimestamp: [Long],
+      disappearingMode: [DisappearingMode]
+    },
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2
+    }
+  },
+  verifiedBizName: 'SmartLink Conexion Inteligente con La Limpieza',
+  body: '',
+  from: '593998081000'
+}
