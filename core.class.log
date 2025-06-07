@@ -2,6 +2,7 @@
   key: {
     remoteJid: '593998081000@s.whatsapp.net',
     fromMe: false,
+<<<<<<< HEAD
     id: 'C5C7C3AA9D619FE2D7A5ED40A4EC375B',
     participant: undefined
   },
@@ -10,6 +11,16 @@
   broadcast: false,
   message: Message {
     conversation: 'Hola',
+=======
+    id: '5FFF850ACC3DEDDBEBAA873A0966F588',
+    participant: undefined
+  },
+  messageTimestamp: 1749003769,
+  pushName: 'SmartLink Conexion Inteligente con La Limpieza',
+  broadcast: false,
+  message: Message {
+    conversation: 'Tienes jabón',
+>>>>>>> 6fade295ec563ac6dd08a1c782fdba4c529cd7be
     messageContextInfo: MessageContextInfo {
       deviceListMetadata: [DeviceListMetadata],
       deviceListMetadataVersion: 2,
@@ -17,12 +28,21 @@
     }
   },
   verifiedBizName: 'SmartLink Conexion Inteligente con La Limpieza',
+<<<<<<< HEAD
   body: 'Hola',
   from: '593998081000'
 }
 [QUEUE_SE_ENVIO]:  {
   ref: 'ans_bf5dbf88-5e10-480a-becd-a38e95832eb8',
   keyword: 'key_5eae9a8e-bc95-43ec-9ce3-7417a61b94ff',
+=======
+  body: 'Tienes jabón',
+  from: '593998081000'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_f6053dcf-97d1-4529-b817-d06851715c01',
+  keyword: 'key_25242da3-5155-4f2c-a33a-8792216beb32',
+>>>>>>> 6fade295ec563ac6dd08a1c782fdba4c529cd7be
   answer: '__call_action__',
   options: {
     media: null,
@@ -36,12 +56,17 @@
     keyword: {},
     callback: true
   },
+<<<<<<< HEAD
   refSerialize: 'f5be329bf72422b6944f083ce04581b1'
+=======
+  refSerialize: '19c8dce236e70c5c5659f8934b244e32'
+>>>>>>> 6fade295ec563ac6dd08a1c782fdba4c529cd7be
 }
 [handleMsg]:  {
   key: {
     remoteJid: '593998081000@s.whatsapp.net',
     fromMe: false,
+<<<<<<< HEAD
     id: 'BAE5A1C49E40F14B',
     participant: undefined
   },
@@ -92,5 +117,27 @@
   },
   verifiedBizName: 'SmartLink Conexion Inteligente con La Limpieza',
   body: '¡Hola! Gracias por escribirnos 🧼. ¿En qué te puedo ayudar hoy?',
+=======
+    id: '3EB0820DC87C759F474CA0',
+    participant: undefined
+  },
+  messageTimestamp: 1749003777,
+  pushName: 'SmartLink Conexion Inteligente con La Limpieza',
+  broadcast: false,
+  message: Message {
+    protocolMessage: ProtocolMessage {
+      type: 4,
+      ephemeralExpiration: 0,
+      ephemeralSettingTimestamp: [Long],
+      disappearingMode: [DisappearingMode]
+    },
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2
+    }
+  },
+  verifiedBizName: 'SmartLink Conexion Inteligente con La Limpieza',
+  body: '',
+>>>>>>> 6fade295ec563ac6dd08a1c782fdba4c529cd7be
   from: '593998081000'
 }
