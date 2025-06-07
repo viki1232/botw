@@ -2,14 +2,14 @@
   key: {
     remoteJid: '593998081000@s.whatsapp.net',
     fromMe: false,
-    id: '5FFF850ACC3DEDDBEBAA873A0966F588',
+    id: 'C5C7C3AA9D619FE2D7A5ED40A4EC375B',
     participant: undefined
   },
-  messageTimestamp: 1749003769,
+  messageTimestamp: 1749318024,
   pushName: 'SmartLink Conexion Inteligente con La Limpieza',
   broadcast: false,
   message: Message {
-    conversation: 'Tienes jabón',
+    conversation: 'Hola',
     messageContextInfo: MessageContextInfo {
       deviceListMetadata: [DeviceListMetadata],
       deviceListMetadataVersion: 2,
@@ -17,12 +17,12 @@
     }
   },
   verifiedBizName: 'SmartLink Conexion Inteligente con La Limpieza',
-  body: 'Tienes jabón',
+  body: 'Hola',
   from: '593998081000'
 }
 [QUEUE_SE_ENVIO]:  {
-  ref: 'ans_f6053dcf-97d1-4529-b817-d06851715c01',
-  keyword: 'key_25242da3-5155-4f2c-a33a-8792216beb32',
+  ref: 'ans_bf5dbf88-5e10-480a-becd-a38e95832eb8',
+  keyword: 'key_5eae9a8e-bc95-43ec-9ce3-7417a61b94ff',
   answer: '__call_action__',
   options: {
     media: null,
@@ -36,31 +36,61 @@
     keyword: {},
     callback: true
   },
-  refSerialize: '19c8dce236e70c5c5659f8934b244e32'
+  refSerialize: 'f5be329bf72422b6944f083ce04581b1'
 }
 [handleMsg]:  {
   key: {
     remoteJid: '593998081000@s.whatsapp.net',
     fromMe: false,
-    id: '3EB0820DC87C759F474CA0',
+    id: 'BAE5A1C49E40F14B',
     participant: undefined
   },
-  messageTimestamp: 1749003777,
+  messageTimestamp: 1749318030,
   pushName: 'SmartLink Conexion Inteligente con La Limpieza',
   broadcast: false,
   message: Message {
-    protocolMessage: ProtocolMessage {
-      type: 4,
-      ephemeralExpiration: 0,
-      ephemeralSettingTimestamp: [Long],
-      disappearingMode: [DisappearingMode]
-    },
-    messageContextInfo: MessageContextInfo {
-      deviceListMetadata: [DeviceListMetadata],
-      deviceListMetadataVersion: 2
+    extendedTextMessage: ExtendedTextMessage {
+      text: '¡Hola! Gracias por escribirnos 🧼. ¿En qué te puedo ayudar hoy?'
     }
   },
   verifiedBizName: 'SmartLink Conexion Inteligente con La Limpieza',
-  body: '',
+  body: '¡Hola! Gracias por escribirnos 🧼. ¿En qué te puedo ayudar hoy?',
+  from: '593998081000'
+}
+[QUEUE_SE_ENVIO]:  {
+  ref: 'ans_bf5dbf88-5e10-480a-becd-a38e95832eb8',
+  keyword: 'key_5eae9a8e-bc95-43ec-9ce3-7417a61b94ff',
+  answer: '__call_action__',
+  options: {
+    media: null,
+    buttons: [],
+    capture: false,
+    child: null,
+    delay: 0,
+    idle: null,
+    ref: null,
+    nested: [],
+    keyword: {},
+    callback: true
+  },
+  refSerialize: 'f5be329bf72422b6944f083ce04581b1'
+}
+[handleMsg]:  {
+  key: {
+    remoteJid: '593998081000@s.whatsapp.net',
+    fromMe: false,
+    id: 'BAE59264B9356E14',
+    participant: undefined
+  },
+  messageTimestamp: 1749318032,
+  pushName: 'SmartLink Conexion Inteligente con La Limpieza',
+  broadcast: false,
+  message: Message {
+    extendedTextMessage: ExtendedTextMessage {
+      text: '¡Hola! Gracias por escribirnos 🧼. ¿En qué te puedo ayudar hoy?'
+    }
+  },
+  verifiedBizName: 'SmartLink Conexion Inteligente con La Limpieza',
+  body: '¡Hola! Gracias por escribirnos 🧼. ¿En qué te puedo ayudar hoy?',
   from: '593998081000'
 }
