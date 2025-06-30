@@ -210,11 +210,13 @@ const flujoRespuestaIA = addKeyword('', { sensitive: true })
             console.log('Sin pregunta válida');
             return;
         }
-      
+        
         // CONTEXTO personalizado
         const contexto = `
 Eres un asistente experto en productos de limpieza de la empresa Smartlink.
 Responde de forma breve y clara sobre estos productos. No inventes respuestas. No hables de temas fuera de limpieza.
+
+Recuerda 4l es un galón y 20l es una caneca
 
 Catálogo:
 Crema Exfoliante Cuerpo, Manos y Pies: Exfolia y humecta la piel. Precio: $5.00 (400 ml), $10.00 (1000 ml), $35.00 (4500 ml). sin fragancia
@@ -229,7 +231,7 @@ Gel Antibacterial: Limpieza de manos sin agua. Precio: $2.00 (370 ml), $4.00 (1L
 Gel Mentolado: Gel refrescante con aroma a mentol para masajes. Precio: $7.00 (1L), $25.00 (4L)
 Shampoo de Avena: Limpia y nutre el cabello con propiedades de la avena. Precio: $2.00 (370 ml), $3.50 (750 ml), $4.00 (1L), $12.00 (4L), $55.00 (20L). Fragancia avena
 Shampoo Antiresiduo: Elimina acumulación de productos en el cabello. Precio: $1.50 (370 ml), $2.50 (1L), $8.00 (4L), $35.00 (20L). Fragancia cítrica
-Shampoo con Aloe Vera: Limpia y fortalece el cabello con propiedades del aloe vera. Precio: $2.00 (370 ml), $3.50 (750 ml), $4.00 (1L), $12.00 (4L), $55.00 (20L). Fragancia frutal
+Shampoo con Aloe Vera: Limpia y fortalece el cabello con propiedades del aloe vera. Precio: $2.00 (370 ml), $4.00 (750 ml), $4.00 (1L), $15.00 (4L), $70.00 (20L). Fragancia frutal
 Shampoo Aloe Vera sin Sal: Ideal para cabellos tratados químicamente, sin sal. Precio: $3.00 (370 ml), $6.00 (750 ml), $7.00 (1L), $20.00 (4L), $80.00 (20L). Fragancia manzanilla y miel
 Alcohol Común 70%: Desinfectante para superficies y manos. Precio: $3.00 (1L), $10.00 (4L), $45.00 (20L)
 Alcohol Mentolado 70% Menticol: Desinfectante con aroma refrescante a mentol. Precio: $3.50 (1L), $12.00 (4L), $50.00 (20L)
@@ -321,19 +323,8 @@ Sé breve, directo y claro.
 
 Usa emojis relacionados con limpieza (ej: 🧼🧽🧴✨).
 
-Si no sabes qué responder, usa:
-"🤖 No tengo información sobre eso. En un momento te paso con el encargado para que responda a tu duda."
-
-
-
----
-
-Respuestas automáticas según el mensaje del usuario:
-
-Saludo simple (Ej: "Hola")
-
-Responde amablemente:
-"¡Hola! Gracias por escribirnos 🧼. ¿En qué te puedo ayudar hoy?"
+Intenta siempre tratar de vender, no te quedes nunca callado, se amable y responda con lo que sepas.
+nunca digas que no tienes informacion sbre el tema, con lo que tenemos en la base de datos responde.
 
 
 
@@ -446,7 +437,7 @@ Lunes a sábado, de 10:00 a.m. a 6:00 p.m.
 
 Medios no textuales:
 
-Si el usuario manda sticker, audio o video, NO respondas con texto.
+Si el usuario manda sticker, audio o video responde amablemente.
 
 Si se despiden, responde de forma natural y amable.
 
@@ -456,12 +447,17 @@ si te preguntan comparacion entre productos investiga y responde con lo que sepa
 si ponen palabras que se relacionen con los productos dale la informacion del producto
 
 cuando te hagan pedidos si puedes hacer los mensajes largos con todos los productos que te pidan, agregando el total
+
+si preguntan la direccion o palabra parecida sobre donde se encuentra el local manda esto: https://maps.app.goo.gl/DP2p6AH2M3sUpkEf6
+
+
 `;
 
 try {
 
     const numero = ctx.from;
-    let respuesta; // <- Declaración aquí arriba
+    let respuesta;
+    const MAX_HISTORIAL = 10; // <- Declaración aquí arriba
 
     if (!sesionesChat[numero]) {
         const response = await openai.chat.completions.create({
@@ -487,6 +483,12 @@ try {
         const chat = sesionesChat[numero];
         chat.historial.push({ role: "user", content: pregunta });
 
+    // Limitar historial para que no crezca demasiado
+        if (chat.historial.length > MAX_HISTORIAL) {
+            chat.historial = chat.historial.slice(chat.historial.length - MAX_HISTORIAL);
+        }
+
+    // Llamada a OpenAI
         const response = await openai.chat.completions.create({
             model: "gpt-4o-mini",
             messages: chat.historial,
@@ -494,7 +496,7 @@ try {
             max_tokens: 500,
         });
 
-        respuesta = response.choices[0].message.content.trim(); // <- Asignación
+        respuesta = response.choices[0].message.content.trim();
         chat.historial.push({ role: "assistant", content: respuesta });
     }
 
@@ -525,7 +527,26 @@ const main = async () => {
     });
 
     QRPortalWeb({ port: 3000 });
-    
+    let ultimaRespuesta = Date.now();
+
+// Cada vez que el bot responde algo, actualiza el timestamp
+    const actualizarActividad = () => {
+        ultimaRespuesta = Date.now();
+    };
+
+// En tus flujos, luego de responder, llama a actualizarActividad()
+
+// Verificación cada 10 segundos
+    setInterval(() => {
+        const inactivo = Date.now() - ultimaRespuesta > 30000; // 30 segundos
+
+        if (!inactivo) {
+            sdNotify.watchdog(); // Solo avisamos si el bot sigue activo
+        } else {
+            console.warn('⚠️ Bot sin actividad reciente');
+        }
+    }, 10000);
+
 };
 
 
