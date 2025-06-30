@@ -549,6 +549,24 @@ const main = async () => {
             console.warn('⚠️ Bot sin actividad reciente');
         }
     }, 10000);
+    let lastActivity = Date.now();
+
+    function registerActivity() {
+    lastActivity = Date.now();
+    }
+
+// Ejemplo: en cada evento que indique actividad, llamas a registerActivity()
+
+    setInterval(() => {
+    const now = Date.now();
+    const diff = now - lastActivity;
+
+  // 4 horas = 4 * 60 minutos * 60 segundos * 1000 ms
+     if (diff > 4 * 60 * 60 * 1000) {
+        console.error('No activity detected in 4 hours. Restarting bot...');
+        process.exit(1); // PM2 reiniciará el bot
+    }
+    }, 10 * 60 * 1000);
 
 };
 
