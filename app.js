@@ -16,7 +16,7 @@ const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 ffmpeg.setFfmpegPath(ffmpegPath);
 require('dotenv').config();
-import sdNotify from 'sd-notify';
+const sdNotify = require('sd-notify');
 // o si usas require:
 // const sdNotify = require('sd-notify');
 
