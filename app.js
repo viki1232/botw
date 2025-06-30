@@ -16,7 +16,7 @@ const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 ffmpeg.setFfmpegPath(ffmpegPath);
 require('dotenv').config();
-const sdNotify = require('sd-notify');
+
 // o si usas require:
 // const sdNotify = require('sd-notify');
 
@@ -171,7 +171,6 @@ const sesionesChat = {};
 
 const flujoRespuestaIA = addKeyword('', { sensitive: true })
     .addAction(async (ctx, { flowDynamic, provider }) => {
-        actividad();
         console.log('\n================== MENSAJE RECIBIDO ==================');
         console.log('📨 Fecha y hora:', new Date().toISOString());
         console.log('👤 De:', ctx.from);
@@ -522,60 +521,17 @@ const main = async () => {
     const adaptorFlow = createFlow([flujoRespuestaIA]);
     const adaptorProvider = createProvider(BaileysProvider);
 
-    // Espera a que se cree el bot y guárdalo en una variable
     createBot({
         flow: adaptorFlow,
         provider: adaptorProvider,
         database: adaptorDB,
     }).then(() => {
         console.log('Bot iniciado correctamente y conectado a WhatsApp');
-    
     });
+
     QRPortalWeb({ port: 3000 });
-    // ...resto del código...
+    
     };
-    function obtenerHoraLocalConDesfase(desfaseHoras) {
-
-        const ahora = new Date();
-  // Obtener hora UTC en ms
-        const utc = ahora.getTime() + (ahora.getTimezoneOffset() * 60000);
-  // Ajustar con desfase (ejemplo: -5 para Ecuador)
-        const horaLocal = new Date(utc + (3600000 * desfaseHoras));
-        return horaLocal.getHours();
-    }
-
-    function estaEnHorarioActivo() {
-  // Desfase horario respecto a UTC, ejemplo Ecuador: -5
-        const desfaseUTC = -5;
-        const horaLocal = obtenerHoraLocalConDesfase(desfaseUTC);
-
-  // Horario activo de 8am a 10pm hora local
-        return horaLocal >= 8 && horaLocal < 22;
-    }
-
-    let ultimaActividad = Date.now();
-
-    function reiniciarSiInactividad() {
-        const ahora = Date.now();
-        const diff = ahora - ultimaActividad; // ms
-        const cuatroHoras = 4 * 60 * 60 * 1000;
-
-
-        if (estaEnHorarioActivo() && diff > cuatroHoras) {
-            console.log("4 horas sin actividad en horario activo, reiniciando...");
-            process.exit(1); // PM2 reiniciará el bot
-        }
-    }
-
-// Cada vez que hay actividad:
-    function actividad() {
-        ultimaActividad = Date.now();
-    }
-
-// Ejecutar cada 10 minutos
-    setInterval(reiniciarSiInactividad, 10 * 60 * 1000);
-
-
 
 
 
