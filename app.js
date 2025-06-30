@@ -521,54 +521,62 @@ const main = async () => {
     const adaptorFlow = createFlow([flujoRespuestaIA]);
     const adaptorProvider = createProvider(BaileysProvider);
 
-    createBot({
+    // Espera a que se cree el bot y guárdalo en una variable
+    const bot = await createBot({
         flow: adaptorFlow,
         provider: adaptorProvider,
         database: adaptorDB,
-    }).then(() => {
-        console.log('Bot iniciado correctamente y conectado a WhatsApp');
+    });
+
+    console.log('Bot iniciado correctamente y conectado a WhatsApp');
+    bot.onMessage((ctx) => {
+        actividad(); // Se actualiza el tiempo de actividad con cada mensaje
     });
 
     QRPortalWeb({ port: 3000 });
-    let ultimaRespuesta = Date.now();
-
-// Cada vez que el bot responde algo, actualiza el timestamp
-    const actualizarActividad = () => {
-        ultimaRespuesta = Date.now();
-    };
-
-// En tus flujos, luego de responder, llama a actualizarActividad()
-
-// Verificación cada 10 segundos
-    setInterval(() => {
-        const inactivo = Date.now() - ultimaRespuesta > 30000; // 30 segundos
-
-        if (!inactivo) {
-            sdNotify.watchdog(); // Solo avisamos si el bot sigue activo
-        } else {
-            console.warn('⚠️ Bot sin actividad reciente');
-        }
-    }, 10000);
-    let lastActivity = Date.now();
-
-    function registerActivity() {
-    lastActivity = Date.now();
-    }
-
-// Ejemplo: en cada evento que indique actividad, llamas a registerActivity()
-
-    setInterval(() => {
-    const now = Date.now();
-    const diff = now - lastActivity;
-
-  // 4 horas = 4 * 60 minutos * 60 segundos * 1000 ms
-     if (diff > 4 * 60 * 60 * 1000) {
-        console.error('No activity detected in 4 hours. Restarting bot...');
-        process.exit(1); // PM2 reiniciará el bot
-    }
-    }, 10 * 60 * 1000);
-
+    // ...resto del código...
 };
+    function obtenerHoraLocalConDesfase(desfaseHoras) {
+
+        const ahora = new Date();
+  // Obtener hora UTC en ms
+        const utc = ahora.getTime() + (ahora.getTimezoneOffset() * 60000);
+  // Ajustar con desfase (ejemplo: -5 para Ecuador)
+        const horaLocal = new Date(utc + (3600000 * desfaseHoras));
+        return horaLocal.getHours();
+    }
+
+    function estaEnHorarioActivo() {
+  // Desfase horario respecto a UTC, ejemplo Ecuador: -5
+        const desfaseUTC = -5;
+        const horaLocal = obtenerHoraLocalConDesfase(desfaseUTC);
+
+  // Horario activo de 8am a 10pm hora local
+        return horaLocal >= 8 && horaLocal < 22;
+    }
+
+    let ultimaActividad = Date.now();
+
+    function reiniciarSiInactividad() {
+        const ahora = Date.now();
+        const diff = ahora - ultimaActividad; // ms
+        const cuatroHoras = 4 * 60 * 60 * 1000;
+
+
+        if (estaEnHorarioActivo() && diff > cuatroHoras) {
+            console.log("4 horas sin actividad en horario activo, reiniciando...");
+            process.exit(1); // PM2 reiniciará el bot
+        }
+    }
+
+// Cada vez que hay actividad:
+    function actividad() {
+        ultimaActividad = Date.now();
+    }
+
+// Ejecutar cada 10 minutos
+    setInterval(reiniciarSiInactividad, 10 * 60 * 1000);
+
 
 
 
