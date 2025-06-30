@@ -16,6 +16,9 @@ const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 ffmpeg.setFfmpegPath(ffmpegPath);
 require('dotenv').config();
+import sdNotify from 'sd-notify';
+// o si usas require:
+// const sdNotify = require('sd-notify');
 
 // Configurar credenciales de Google Speech-to-Text
 // Establece la variable de entorno para las credenciales
