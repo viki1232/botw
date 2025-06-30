@@ -171,6 +171,7 @@ const sesionesChat = {};
 
 const flujoRespuestaIA = addKeyword('', { sensitive: true })
     .addAction(async (ctx, { flowDynamic, provider }) => {
+        actividad();
         console.log('\n================== MENSAJE RECIBIDO ==================');
         console.log('📨 Fecha y hora:', new Date().toISOString());
         console.log('👤 De:', ctx.from);
@@ -522,20 +523,17 @@ const main = async () => {
     const adaptorProvider = createProvider(BaileysProvider);
 
     // Espera a que se cree el bot y guárdalo en una variable
-    const bot = await createBot({
+    createBot({
         flow: adaptorFlow,
         provider: adaptorProvider,
         database: adaptorDB,
+    }).then(() => {
+        console.log('Bot iniciado correctamente y conectado a WhatsApp');
+    
     });
-
-    console.log('Bot iniciado correctamente y conectado a WhatsApp');
-    bot.onMessage((ctx) => {
-        actividad(); // Se actualiza el tiempo de actividad con cada mensaje
-    });
-
     QRPortalWeb({ port: 3000 });
     // ...resto del código...
-};
+    };
     function obtenerHoraLocalConDesfase(desfaseHoras) {
 
         const ahora = new Date();
@@ -576,6 +574,7 @@ const main = async () => {
 
 // Ejecutar cada 10 minutos
     setInterval(reiniciarSiInactividad, 10 * 60 * 1000);
+
 
 
 
