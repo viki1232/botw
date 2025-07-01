@@ -509,13 +509,13 @@ try {
 } catch (error) {
     console.error('❌ Error al obtener respuesta de la IA:', error);
     await flowDynamic('⚠️ Ocurrió un error al responder tu pregunta.');
-    actividad();
+    
     
 }
 });
 
   
-
+s
 
 const main = async () => {
     const adaptorDB = new MongoAdapter({
@@ -550,7 +550,7 @@ const main = async () => {
      const adaptorProvider = createProvider(BaileysProvider, {
         onMessage: async (ctx) => {
             onMensajeEntrante(ctx); // vigila si responde
-            actividad();            // actualiza actividad
+                    
         },
     });
 
