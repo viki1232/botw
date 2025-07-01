@@ -506,13 +506,13 @@ try {
     console.log('🧠 Respuesta IA:', respuesta);
     await flowDynamic(respuesta);
 } catch (error) {
+    console.error('❌ Error al obtener respuesta de la IA:', error);
     await flowDynamic('⚠️ Ocurrió un error al responder tu pregunta.');
-} finally {
-    actividad(); // limpia el temporizador solo después de responder
 }
 });
 
   
+// ...existing code...
 
 
 const main = async () => {
@@ -543,12 +543,12 @@ const main = async () => {
                 console.error("❌ El bot no respondió al mensaje, reiniciando...");
                 process.exit(1); // reinicio automático por systemd
             }
-        }, 20000); // espera 10 segundos
+        }, 10000); // espera 10 segundos
     }
      const adaptorProvider = createProvider(BaileysProvider, {
         onMessage: async (ctx) => {
             onMensajeEntrante(ctx); // vigila si responde
-                       // actualiza actividad
+            actividad();            // actualiza actividad
         },
     });
 
