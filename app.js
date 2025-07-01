@@ -509,6 +509,7 @@ try {
 } catch (error) {
     console.error('❌ Error al obtener respuesta de la IA:', error);
     await flowDynamic('⚠️ Ocurrió un error al responder tu pregunta.');
+    actividad();
     
 }
 });
