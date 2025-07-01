@@ -537,6 +537,10 @@ const main = async () => {
         dbName: MONGO_DB_NAME,
     });
 
+    
+
+    const adaptorFlow = createFlow([flujoRespuestaIA]);
+    
     function onMensajeEntrante(ctx) {
         esperandoRespuesta = true;
 
