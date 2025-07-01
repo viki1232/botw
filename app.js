@@ -169,6 +169,16 @@ async function procesarAudio(ctx) {
 
 const sesionesChat = {};
 
+
+let esperandoRespuesta = false;
+let temporizadorReinicio = null;
+let ultimaActividad = Date.now();
+
+function actividad() {
+    esperandoRespuesta = false;
+    if (temporizadorReinicio) clearTimeout(temporizadorReinicio);
+    ultimaActividad = Date.now();
+}
 const flujoRespuestaIA = addKeyword('', { sensitive: true })
     .addAction(async (ctx, { flowDynamic, provider }) => {
         console.log('\n================== MENSAJE RECIBIDO ==================');
@@ -526,19 +536,6 @@ const main = async () => {
         dbUri: MONGO_DB_URI,
         dbName: MONGO_DB_NAME,
     });
-
-    
-
-    const adaptorFlow = createFlow([flujoRespuestaIA]);
-    let esperandoRespuesta = false;
-    let temporizadorReinicio = null;
-    let ultimaActividad = Date.now();
-
-    function actividad() {
-        esperandoRespuesta = false;
-        if (temporizadorReinicio) clearTimeout(temporizadorReinicio);
-        ultimaActividad = Date.now();
-    }
 
     function onMensajeEntrante(ctx) {
         esperandoRespuesta = true;
