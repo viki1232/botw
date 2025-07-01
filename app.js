@@ -514,6 +514,36 @@ try {
   
 // ...existing code...
 
+let ultimaActividad = Date.now();
+
+function actividad() {
+    ultimaActividad = Date.now();
+}
+
+function obtenerHoraLocalConDesfase(desfaseHoras) {
+    const ahora = new Date();
+    const utc = ahora.getTime() + (ahora.getTimezoneOffset() * 60000);
+    return new Date(utc + (3600000 * desfaseHoras)).getHours();
+}
+
+function estaEnHorarioActivo() {
+    const desfaseUTC = -5; // Ecuador
+    const horaLocal = obtenerHoraLocalConDesfase(desfaseUTC);
+    return horaLocal >= 8 && horaLocal < 22;
+}
+
+function reiniciarSiInactivo() {
+    const ahora = Date.now();
+    const cuatroHoras = 4 * 60 * 60 * 1000;
+    const inactivo = ahora - ultimaActividad > cuatroHoras;
+
+    if (estaEnHorarioActivo() && inactivo) {
+        console.log("⚠️ 4 horas sin actividad en horario activo. Reiniciando...");
+        process.exit(1); // systemd reinicia
+    }
+}
+
+setInterval(reiniciarSiInactivo, 10 * 60 * 1000); // cada 10 min
 
 const main = async () => {
     const adaptorDB = new MongoAdapter({
@@ -521,34 +551,10 @@ const main = async () => {
         dbName: MONGO_DB_NAME,
     });
 
-    
-
     const adaptorFlow = createFlow([flujoRespuestaIA]);
-
-    let esperandoRespuesta = false;
-    let temporizadorReinicio = null;
-    let ultimaActividad = Date.now();
-
-    function actividad() {
-        esperandoRespuesta = false;
-        if (temporizadorReinicio) clearTimeout(temporizadorReinicio);
-        ultimaActividad = Date.now();
-    }
-
-    function onMensajeEntrante(ctx) {
-        esperandoRespuesta = true;
-
-        temporizadorReinicio = setTimeout(() => {
-            if (esperandoRespuesta) {
-                console.error("❌ El bot no respondió al mensaje, reiniciando...");
-                process.exit(1); // reinicio automático por systemd
-            }
-        }, 10000); // espera 10 segundos
-    }
-     const adaptorProvider = createProvider(BaileysProvider, {
-        onMessage: async (ctx) => {
-            onMensajeEntrante(ctx); // vigila si responde
-            actividad();            // actualiza actividad
+    const adaptorProvider = createProvider(BaileysProvider, {
+        onMessage: async (message) => {
+            actividad(); // registra actividad
         },
     });
 
