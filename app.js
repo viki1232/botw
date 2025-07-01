@@ -505,12 +505,10 @@ try {
 
     console.log('🧠 Respuesta IA:', respuesta);
     await flowDynamic(respuesta);
-    actividad();
 } catch (error) {
-    console.error('❌ Error al obtener respuesta de la IA:', error);
     await flowDynamic('⚠️ Ocurrió un error al responder tu pregunta.');
-    
-    
+} finally {
+    actividad(); // limpia el temporizador solo después de responder
 }
 });
 
@@ -550,7 +548,7 @@ const main = async () => {
      const adaptorProvider = createProvider(BaileysProvider, {
         onMessage: async (ctx) => {
             onMensajeEntrante(ctx); // vigila si responde
-                    
+                       // actualiza actividad
         },
     });
 
