@@ -227,13 +227,12 @@ const flujoRespuestaIA = addKeyword('', { sensitive: true })
         // CONTEXTO personalizado
         const contexto = `
 Eres un asistente experto en productos de limpieza de la empresa Smartlink.
-Responde de forma breve y clara sobre estos productos. No inventes respuestas. No hables de temas fuera de limpieza.
+Responde solo sobre productos de limpieza de nuestro catálogo.
+Si el usuario pregunta por algo que no está en el catálogo, intenta ayudar con la información más cercana posible.
+No respondas preguntas sobre otros temas.
+Responde de forma breve, clara y amable.
 
-no puedes hablar de otros temas, solo de productos de limpieza.
-no te salgas del tema de limpieza, no hables de otros temas, solo de productos de limpieza.
-solo responde si tiene referencia a los productos que estan en nuestro catalogo
-
-Recuerda 4l es un galón y 20l es una caneca
+Recuerda: 4l es un galón y 20l es una caneca.
 
 Catálogo:
 Crema Exfoliante Cuerpo, Manos y Pies: Exfolia y humecta la piel. Precio: $5.00 (400 ml), $10.00 (1000 ml), $35.00 (4500 ml). sin fragancia
@@ -477,45 +476,53 @@ try {
     const MAX_HISTORIAL = 10; // <- Declaración aquí arriba
 
     if (!sesionesChat[numero]) {
-        const response = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
-            messages: [
-                { role: "system", content: contexto },
-                { role: "user", content: pregunta }
-            ],
-            temperature: 0.4,
-            max_tokens: 500,
-        });
+    // Crear historial por primera vez
+    const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+            { role: "system", content: contexto },
+            { role: "user", content: pregunta }
+        ],
+        temperature: 0.4,
+        max_tokens: 500,
+    });
 
-        respuesta = response.choices[0].message.content.trim(); // <- Asignación
-        sesionesChat[numero] = {
-            contexto,
-            historial: [
-                { role: "system", content: contexto },
-                { role: "user", content: pregunta },
-                { role: "assistant", content: respuesta }
-            ]
-        };
-    } else {
-        const chat = sesionesChat[numero];
-        chat.historial.push({ role: "user", content: pregunta });
+    respuesta = response.choices[0].message.content.trim();
+    sesionesChat[numero] = {
+        contexto,
+        historial: [
+            { role: "system", content: contexto },
+            { role: "user", content: pregunta },
+            { role: "assistant", content: respuesta }
+        ]
+    };
+} else {
+    const chat = sesionesChat[numero];
 
-    // Limitar historial para que no crezca demasiado
-        if (chat.historial.length > MAX_HISTORIAL) {
-            chat.historial = chat.historial.slice(chat.historial.length - MAX_HISTORIAL);
-        }
-
-    // Llamada a OpenAI
-        const response = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
-            messages: chat.historial,
-            temperature: 0.4,
-            max_tokens: 500,
-        });
-
-        respuesta = response.choices[0].message.content.trim();
-        chat.historial.push({ role: "assistant", content: respuesta });
+    // Asegurar que el primer mensaje siempre sea el 'system'
+    if (chat.historial[0]?.role !== "system") {
+        chat.historial.unshift({ role: "system", content: contexto });
     }
+
+    chat.historial.push({ role: "user", content: pregunta });
+
+    // Limitar historial
+    if (chat.historial.length > MAX_HISTORIAL + 1) {
+        // +1 por el system
+        const systemMsg = chat.historial[0];
+        chat.historial = [systemMsg, ...chat.historial.slice(-MAX_HISTORIAL)];
+    }
+
+    const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: chat.historial,
+        temperature: 0.4,
+        max_tokens: 500,
+    });
+
+    respuesta = response.choices[0].message.content.trim();
+    chat.historial.push({ role: "assistant", content: respuesta });
+}
 
         console.log('🧠 Respuesta IA:', respuesta);
 
