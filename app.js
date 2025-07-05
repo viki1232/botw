@@ -16,6 +16,8 @@ const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 ffmpeg.setFfmpegPath(ffmpegPath);
 require('dotenv').config();
+const { Boom } = require('@hapi/boom');
+const { DisconnectReason } = require('@adiwajshing/baileys');
 
 // o si usas require:
 // const sdNotify = require('sd-notify');
@@ -174,10 +176,28 @@ let esperandoRespuesta = false;
 let temporizadorReinicio = null;
 let ultimaActividad = Date.now();
 
+function limpiarTemporizador() {
+    if (temporizadorReinicio) {
+        clearTimeout(temporizadorReinicio);
+        temporizadorReinicio = null;
+    }
+}
+
 function actividad() {
     esperandoRespuesta = false;
-    if (temporizadorReinicio) clearTimeout(temporizadorReinicio);
+    limpiarTemporizador();
     ultimaActividad = Date.now();
+}
+
+function onMensajeEntrante() {
+    limpiarTemporizador();
+    esperandoRespuesta = true;
+    temporizadorReinicio = setTimeout(() => {
+        if (esperandoRespuesta) {
+            console.error("❌ El bot no respondió al mensaje, reiniciando...");
+            process.exit(1); // reinicio automático por systemd
+        }
+    }, 10000); // espera 10 segundos
 }
 const flujoRespuestaIA = addKeyword('', { sensitive: true })
     .addAction(async (ctx, { flowDynamic, provider }) => {
@@ -548,26 +568,35 @@ const main = async () => {
         dbName: MONGO_DB_NAME,
     });
 
-    
 
     const adaptorFlow = createFlow([flujoRespuestaIA]);
-    
-    function onMensajeEntrante(ctx) {
-        esperandoRespuesta = true;
 
-        temporizadorReinicio = setTimeout(() => {
-            if (esperandoRespuesta) {
-                console.error("❌ El bot no respondió al mensaje, reiniciando...");
-                process.exit(1); // reinicio automático por systemd
-            }
-        }, 10000); // espera 10 segundos
-    }
+  
     const adaptorProvider = createProvider(BaileysProvider, {
         onMessage: async (ctx) => {
 
             onMensajeEntrante(ctx);
         },
     });
+
+    adaptorProvider.getInstance().then((wa) => {
+        wa.ev.on('connection.update', (update) => {
+            const { connection, lastDisconnect } = update;
+            if (connection === 'close') {
+                const reason = (lastDisconnect?.error) ? Boom.isBoom(lastDisconnect.error) ? lastDisconnect.error.output.statusCode : null : null;
+                if (reason === DisconnectReason.loggedOut) {
+                    console.error('⚠️ Sesión cerrada, requiere re-login (scan QR)');
+            // Aquí podrías evitar reiniciar para que puedas escanear QR
+                    return;
+            }
+            console.error('❌ Baileys se desconectó. Reiniciando el bot...');
+            process.exit(1);
+        }
+        if (connection === 'open') {
+            console.log('✅ Baileys reconectado correctamente.');
+        }
+    });
+});
 
     await createBot({
         flow: adaptorFlow,
