@@ -577,26 +577,29 @@ const main = async () => {
 
             onMensajeEntrante(ctx);
         },
-    });
-
-    adaptorProvider.getInstance().then((wa) => {
-        wa.ev.on('connection.update', (update) => {
-            const { connection, lastDisconnect } = update;
-            if (connection === 'close') {
-                const reason = (lastDisconnect?.error) ? Boom.isBoom(lastDisconnect.error) ? lastDisconnect.error.output.statusCode : null : null;
-                if (reason === DisconnectReason.loggedOut) {
-                    console.error('⚠️ Sesión cerrada, requiere re-login (scan QR)');
+        onReady:(wa) => {
+            wa.ev.on('connection.update', (update) => {
+                const { connection, lastDisconnect } = update;
+                if (connection === 'close') {
+                    const reason = (lastDisconnect?.error) ? Boom.isBoom(lastDisconnect.error) ? lastDisconnect.error.output.statusCode : null : null;
+                    if (reason === DisconnectReason.loggedOut) {
+                        console.error('⚠️ Sesión cerrada, requiere re-login (scan QR)');
             // Aquí podrías evitar reiniciar para que puedas escanear QR
-                    return;
+                        return;
+                }
+                console.error('❌ Baileys se desconectó. Reiniciando el bot...');
+                process.exit(1);
             }
-            console.error('❌ Baileys se desconectó. Reiniciando el bot...');
-            process.exit(1);
-        }
-        if (connection === 'open') {
-            console.log('✅ Baileys reconectado correctamente.');
-        }
-    });
+            if (connection === 'open') {
+                console.log('✅ Baileys reconectado correctamente.');
+            }
+        });
+    }
+
 });
+
+ 
+        
 
     await createBot({
         flow: adaptorFlow,
