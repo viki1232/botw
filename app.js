@@ -28,12 +28,12 @@ const { DisconnectReason } = require('@adiwajshing/baileys');
 
 const speech = require('@google-cloud/speech');
 const client = new speech.SpeechClient({
-  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS || 'C:/Users/nikol/base-baileys-mongo/my-project-1728755801303-6f9a4a697d27.json'
+  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS || '/home/nikollsalerno/botw/my-project-1728755801303-6f9a4a697d27.json'
 });
 
 
 const openai = new OpenAI({
-  apiKey: "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",
+  apiKey: "process.env.OPENAI_API_KEY",
 });
 
 
@@ -228,7 +228,6 @@ const flujoRespuestaIA = addKeyword('', { sensitive: true })
         // Si detectamos un audio, procesarlo
         if (messageType === 'audioMessage' || isAudioEvent || hasAudioMessage) {
             console.log('🎤 PROCESANDO AUDIO...');
-            
             
             const textoAudio = await procesarAudio(ctx);
             
@@ -610,7 +609,7 @@ const main = async () => {
     });
 
     console.log('Bot iniciado correctamente y conectado a WhatsApp');
-    QRPortalWeb({ port: 4000 });
+    QRPortalWeb({ port: 3000 });
 };
 
 main();
