@@ -27,10 +27,13 @@ const { DisconnectReason } = require('@adiwajshing/baileys');
 
 
 const speech = require('@google-cloud/speech');
-const client = new speech.SpeechClient();
+const client = new speech.SpeechClient({
+  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS || 'C:/Users/nikol/base-baileys-mongo/my-project-1728755801303-6f9a4a697d27.json'
+});
+
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: "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",
 });
 
 
@@ -225,14 +228,13 @@ const flujoRespuestaIA = addKeyword('', { sensitive: true })
         // Si detectamos un audio, procesarlo
         if (messageType === 'audioMessage' || isAudioEvent || hasAudioMessage) {
             console.log('🎤 PROCESANDO AUDIO...');
-            await flowDynamic('🎵 Estoy procesando tu audio...');
+            
             
             const textoAudio = await procesarAudio(ctx);
             
             if (textoAudio && textoAudio.trim()) {
                 pregunta = textoAudio.toLowerCase();
                 console.log('✅ Texto del audio:', textoAudio);
-                await flowDynamic(`📝 *He entendido:* "${textoAudio}"\n\n`);
             } else {
                 await flowDynamic('⚠️ No pude procesar el audio. Intenta escribir tu mensaje.');
                 return;
@@ -608,7 +610,7 @@ const main = async () => {
     });
 
     console.log('Bot iniciado correctamente y conectado a WhatsApp');
-    QRPortalWeb({ port: 3000 });
+    QRPortalWeb({ port: 4000 });
 };
 
 main();
