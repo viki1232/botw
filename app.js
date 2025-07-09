@@ -24,7 +24,7 @@ const { DisconnectReason } = require('@adiwajshing/baileys');
 
 // Configurar credenciales de Google Speech-to-Text
 // Establece la variable de entorno para las credenciales
-process.env.GOOGLE_APPLICATION_CREDENTIALS = './google-credentials.json';
+
 
 const speech = require('@google-cloud/speech');
 const client = new speech.SpeechClient();
