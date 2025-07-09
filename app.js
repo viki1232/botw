@@ -16,7 +16,9 @@ const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 ffmpeg.setFfmpegPath(ffmpegPath);
 require('dotenv').config();
-const sdNotify = require('sd-notify');
+const { Boom } = require('@hapi/boom');
+const { DisconnectReason } = require('@adiwajshing/baileys');
+
 // o si usas require:
 // const sdNotify = require('sd-notify');
 
@@ -169,6 +171,34 @@ async function procesarAudio(ctx) {
 
 const sesionesChat = {};
 
+
+let esperandoRespuesta = false;
+let temporizadorReinicio = null;
+let ultimaActividad = Date.now();
+
+function limpiarTemporizador() {
+    if (temporizadorReinicio) {
+        clearTimeout(temporizadorReinicio);
+        temporizadorReinicio = null;
+    }
+}
+
+function actividad() {
+    esperandoRespuesta = false;
+    limpiarTemporizador();
+    ultimaActividad = Date.now();
+}
+
+function onMensajeEntrante() {
+    limpiarTemporizador();
+    esperandoRespuesta = true;
+    temporizadorReinicio = setTimeout(() => {
+        if (esperandoRespuesta) {
+            console.error("❌ El bot no respondió al mensaje, reiniciando...");
+            process.exit(1); // reinicio automático por systemd
+        }
+    }, 10000); // espera 10 segundos
+}
 const flujoRespuestaIA = addKeyword('', { sensitive: true })
     .addAction(async (ctx, { flowDynamic, provider }) => {
         console.log('\n================== MENSAJE RECIBIDO ==================');
@@ -217,9 +247,12 @@ const flujoRespuestaIA = addKeyword('', { sensitive: true })
         // CONTEXTO personalizado
         const contexto = `
 Eres un asistente experto en productos de limpieza de la empresa Smartlink.
-Responde de forma breve y clara sobre estos productos. No inventes respuestas. No hables de temas fuera de limpieza.
+Responde solo sobre productos de limpieza de nuestro catálogo.
+Si el usuario pregunta por algo que no está en el catálogo, intenta ayudar con la información más cercana posible.
+No respondas preguntas sobre otros temas.
+Responde de forma breve, clara y amable.
 
-Recuerda 4l es un galón y 20l es una caneca
+Recuerda: 4l es un galón y 20l es una caneca.
 
 Catálogo:
 Crema Exfoliante Cuerpo, Manos y Pies: Exfolia y humecta la piel. Precio: $5.00 (400 ml), $10.00 (1000 ml), $35.00 (4500 ml). sin fragancia
@@ -463,95 +496,120 @@ try {
     const MAX_HISTORIAL = 10; // <- Declaración aquí arriba
 
     if (!sesionesChat[numero]) {
-        const response = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
-            messages: [
-                { role: "system", content: contexto },
-                { role: "user", content: pregunta }
-            ],
-            temperature: 0.4,
-            max_tokens: 500,
-        });
+    // Crear historial por primera vez
+    const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+            { role: "system", content: contexto },
+            { role: "user", content: pregunta }
+        ],
+        temperature: 0.4,
+        max_tokens: 500,
+    });
 
-        respuesta = response.choices[0].message.content.trim(); // <- Asignación
-        sesionesChat[numero] = {
-            contexto,
-            historial: [
-                { role: "system", content: contexto },
-                { role: "user", content: pregunta },
-                { role: "assistant", content: respuesta }
-            ]
-        };
-    } else {
-        const chat = sesionesChat[numero];
-        chat.historial.push({ role: "user", content: pregunta });
+    respuesta = response.choices[0].message.content.trim();
+    sesionesChat[numero] = {
+        contexto,
+        historial: [
+            { role: "system", content: contexto },
+            { role: "user", content: pregunta },
+            { role: "assistant", content: respuesta }
+        ]
+    };
+} else {
+    const chat = sesionesChat[numero];
 
-    // Limitar historial para que no crezca demasiado
-        if (chat.historial.length > MAX_HISTORIAL) {
-            chat.historial = chat.historial.slice(chat.historial.length - MAX_HISTORIAL);
-        }
-
-    // Llamada a OpenAI
-        const response = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
-            messages: chat.historial,
-            temperature: 0.4,
-            max_tokens: 500,
-        });
-
-        respuesta = response.choices[0].message.content.trim();
-        chat.historial.push({ role: "assistant", content: respuesta });
+    // Asegurar que el primer mensaje siempre sea el 'system'
+    if (chat.historial[0]?.role !== "system") {
+        chat.historial.unshift({ role: "system", content: contexto });
     }
 
-    console.log('🧠 Respuesta IA:', respuesta);
-    await flowDynamic(respuesta);
-} catch (error) {
-    console.error('❌ Error al obtener respuesta de la IA:', error);
-    await flowDynamic('⚠️ Ocurrió un error al responder tu pregunta.');
+    chat.historial.push({ role: "user", content: pregunta });
+
+    // Limitar historial
+    if (chat.historial.length > MAX_HISTORIAL + 1) {
+        // +1 por el system
+        const systemMsg = chat.historial[0];
+        chat.historial = [systemMsg, ...chat.historial.slice(-MAX_HISTORIAL)];
+    }
+
+    const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: chat.historial,
+        temperature: 0.4,
+        max_tokens: 500,
+    });
+
+    respuesta = response.choices[0].message.content.trim();
+    chat.historial.push({ role: "assistant", content: respuesta });
 }
-});
+
+        console.log('🧠 Respuesta IA:', respuesta);
+
+        await flowDynamic(respuesta);
+        } catch (error) {
+            console.error('❌ Error al obtener respuesta de la IA:', error);
+            await flowDynamic('⚠️ Ocurrió un error al responder tu pregunta.');
+        } finally {
+            actividad(); // Limpia el temporizador solo después de responder
+        }
+    });
 
   
+// ...existing code...
+
+
+
+
+
 const main = async () => {
     const adaptorDB = new MongoAdapter({
         dbUri: MONGO_DB_URI,
         dbName: MONGO_DB_NAME,
     });
 
-    const adaptorFlow = createFlow([flujoRespuestaIA]);
-    const adaptorProvider = createProvider(BaileysProvider);
 
-    createBot({
+    const adaptorFlow = createFlow([flujoRespuestaIA]);
+
+  
+    const adaptorProvider = createProvider(BaileysProvider, {
+        onMessage: async (ctx) => {
+
+            onMensajeEntrante(ctx);
+        },
+        onReady:(wa) => {
+            wa.ev.on('connection.update', (update) => {
+                const { connection, lastDisconnect } = update;
+                if (connection === 'close') {
+                    const reason = (lastDisconnect?.error) ? Boom.isBoom(lastDisconnect.error) ? lastDisconnect.error.output.statusCode : null : null;
+                    if (reason === DisconnectReason.loggedOut) {
+                        console.error('⚠️ Sesión cerrada, requiere re-login (scan QR)');
+            // Aquí podrías evitar reiniciar para que puedas escanear QR
+                        return;
+                }
+                console.error('❌ Baileys se desconectó. Reiniciando el bot...');
+                process.exit(1);
+            }
+            if (connection === 'open') {
+                console.log('✅ Baileys reconectado correctamente.');
+            }
+        });
+    }
+
+});
+
+ 
+        
+
+    await createBot({
         flow: adaptorFlow,
         provider: adaptorProvider,
         database: adaptorDB,
-    }).then(() => {
-        console.log('Bot iniciado correctamente y conectado a WhatsApp');
     });
 
+    console.log('Bot iniciado correctamente y conectado a WhatsApp');
     QRPortalWeb({ port: 3000 });
-    let ultimaRespuesta = Date.now();
-
-// Cada vez que el bot responde algo, actualiza el timestamp
-    const actualizarActividad = () => {
-        ultimaRespuesta = Date.now();
-    };
-
-// En tus flujos, luego de responder, llama a actualizarActividad()
-
-// Verificación cada 10 segundos
-    setInterval(() => {
-        const inactivo = Date.now() - ultimaRespuesta > 30000; // 30 segundos
-
-        if (!inactivo) {
-            sdNotify.watchdog(); // Solo avisamos si el bot sigue activo
-        } else {
-            console.warn('⚠️ Bot sin actividad reciente');
-        }
-    }, 10000);
-
 };
 
-
-
 main();
+// ...existing code...
